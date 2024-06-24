@@ -11,9 +11,15 @@ export function get_notes () {
 
 export function create_note({ body }: Context) {
     const {content} = body as TBody;
-    client.query("INSERT INTO notes (content) VALUES (?)").run(content);
+    const currentNote = client.query("INSERT INTO notes (content) VALUES (?) RETURNING *").get(content) as INote;
 
-    const currentNote = client.query("SELECT * FROM notes ORDER BY id DESC LIMIT 1").all() as INote[];
-
-    return <div>{currentNote[0].content}</div>
+    return (
+        <>
+            <form id="noteForm" hx-post="/notes" hx-target="#notes" hx-swap="beforeend" hx-swap-oob="true">
+                <textarea name="content"></textarea>
+                <button>Create note</button>
+            </form>
+            <div>{currentNote.content}</div>
+        </>
+    )
 }
