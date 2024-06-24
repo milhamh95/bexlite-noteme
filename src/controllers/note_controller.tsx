@@ -23,3 +23,11 @@ export function create_note({ body }: Context) {
         </>
     )
 }
+
+export function delete_note({params}: Context) {
+    const {id} = params;
+
+    client.query("DELETE FROM notes WHERE id = ?").run(id);
+
+    return null;
+}

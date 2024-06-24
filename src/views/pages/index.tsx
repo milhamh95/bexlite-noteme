@@ -14,7 +14,12 @@ export const Home = ({notes}: {notes: INote[]}) => {
                 <button>Create note</button>
             </form>
             <div id="notes">{notes.map((note) => {
-                return <div>{note.content}</div>
+                return (
+                    <main>
+                        <div>{note.content}</div>
+                        <button hx-delete={`/notes/${note.id}`} hx-target="closest main">Delete</button>
+                    </main>
+                );
             })}</div>
         </TemplateBase>
     )
