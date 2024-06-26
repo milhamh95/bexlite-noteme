@@ -1,6 +1,8 @@
 import { client } from "../models/client";
-import { TBody } from "../types/entity";
-import { Home, INote } from "../views/pages";
+import { INote, TBody } from "../types/entity";
+import { NoteCard } from "../views/components/note_card";
+import { NoteForm, NoteFormUpdate } from "../views/components/note_form";
+import { Home } from "../views/pages";
 import { Context } from "elysia";
 
 export function get_notes () {
@@ -15,15 +17,8 @@ export function create_note({ body }: Context) {
 
     return (
         <>
-            <form id="noteForm" hx-post="/notes" hx-target="#notes" hx-swap="beforeend" hx-swap-oob="true">
-                <textarea name="content"></textarea>
-                <button>Create note</button>
-            </form>
-            <main id={`note-${currentNote.id}`}>
-                <div>{currentNote.content}</div>
-                <button hx-get={`/notes/${currentNote.id}/edit`} hx-swap="none">Edit</button>
-                <button hx-delete={`/notes/${currentNote.id}`} hx-target="closest main">Delete</button>
-            </main>
+            <NoteForm />
+            <NoteCard note={currentNote}/>
         </>
     )
 }
@@ -45,17 +40,9 @@ export function update_todo({params, body}: Context) {
 
     return (
         <>
-            <form id="noteForm" hx-post="/notes" hx-target="#notes" hx-swap="beforeend" hx-swap-oob="true">
-                <textarea name="content"></textarea>
-                <button>Create note</button>
-            </form>
-            <main id={`note-${updatedNote[0].id}`}>
-                <div>{updatedNote[0].content}</div>
-                <button hx-get={`/notes/${updatedNote[0].id}/edit`} hx-swap="none">Edit</button>
-                <button hx-delete={`/notes/${updatedNote[0].id}`} hx-target="closest main">Delete</button>
-            </main>
+            <NoteForm />
+            <NoteCard note={updatedNote[0]}/>
         </>
-        
     )
 }
 
@@ -66,10 +53,8 @@ export function update_todo_ui({params}: Context) {
 
     return (
         <>
-            <form id="noteForm" hx-put={`/notes/${id}`} hx-target={`#note-${id}`} hx-swap="outerHTML" hx-swap-oob="true">
-                <textarea name="content">{currentNote[0].content}</textarea>
-                <button>Update note</button>
-            </form>
+            <NoteFormUpdate id={id} note={currentNote[0]}/> 
+            <NoteCard note={currentNote[0]} isDisabled withOob/>
         </>
     )
 }
