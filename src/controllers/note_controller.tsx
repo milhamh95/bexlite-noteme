@@ -44,11 +44,18 @@ export function update_todo({params, body}: Context) {
     const updatedNote = client.query("SELECT * FROM notes WHERE id = ?").all(id) as INote[];
 
     return (
-        <main id={`note-${updatedNote[0].id}`}>
-            <div>{updatedNote[0].content}</div>
-            <button hx-get={`/notes/${updatedNote[0].id}/edit`} hx-swap="none">Edit</button>
-            <button hx-delete={`/notes/${updatedNote[0].id}`} hx-target="closest main">Delete</button>
-        </main>
+        <>
+            <form id="noteForm" hx-post="/notes" hx-target="#notes" hx-swap="beforeend" hx-swap-oob="true">
+                <textarea name="content"></textarea>
+                <button>Create note</button>
+            </form>
+            <main id={`note-${updatedNote[0].id}`}>
+                <div>{updatedNote[0].content}</div>
+                <button hx-get={`/notes/${updatedNote[0].id}/edit`} hx-swap="none">Edit</button>
+                <button hx-delete={`/notes/${updatedNote[0].id}`} hx-target="closest main">Delete</button>
+            </main>
+        </>
+        
     )
 }
 
